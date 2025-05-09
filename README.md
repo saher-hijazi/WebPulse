@@ -128,6 +128,16 @@ WebPulse is a full-stack SaaS web application that allows users to register webs
 4. Run `docker-compose up -d`
 5. Set up a domain and SSL certificate (optional)
 
+## 🛣️ Roadmap
+
+- [x] Website registration and scanning
+- [x] Performance dashboard
+- [ ] Admin panel for user management
+- [ ] Telegram bot notifications
+- [ ] Advanced historical analytics
+- [ ] Multi-user collaboration per project
+
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
