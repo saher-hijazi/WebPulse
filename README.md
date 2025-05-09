@@ -76,7 +76,7 @@ WebPulse is a full-stack SaaS web application that allows users to register webs
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/webpulse.git
+   git clone[ https://github.com/saher-hijazi/WebPulse.git]
    cd webpulse
    ```
 
