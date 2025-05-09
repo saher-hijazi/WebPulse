@@ -19,7 +19,7 @@ dotenv.config();
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Set up middleware
 app.use(cors());
@@ -52,22 +52,13 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   try {
-    // Connect to database
-    await sequelize.authenticate();
-    logger.info('Database connection has been established successfully.');
-    
-    // Sync database models (in development)
-    if (process.env.NODE_ENV === 'development') {
-      await sequelize.sync({ alter: true });
-      logger.info('Database models synchronized.');
-    }
-    
-    // Start the server
+    // Start the server without database connection for now
     app.listen(PORT, () => {
       logger.info(`Server running on port ${PORT}`);
-      
-      // Initialize the scheduler for periodic scans
-      initScheduler();
+      logger.info('Database connection skipped for development.');
+
+      // Skip scheduler initialization for now
+      // initScheduler();
     });
   } catch (error) {
     logger.error('Unable to start server:', error);

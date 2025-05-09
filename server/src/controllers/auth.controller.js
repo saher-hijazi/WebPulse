@@ -10,33 +10,29 @@ export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email already registered',
-      });
-    }
+    // Mock registration for development
+    // In a real app, this would check if the user exists and create a new user
 
-    // Create new user
-    const user = await User.create({
-      name,
-      email,
-      password,
-    });
+    // Mock user
+    const mockUser = {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      name: name || 'Test User',
+      email: email || 'test@example.com',
+      role: 'user',
+      generateToken: () => 'mock_jwt_token_for_development'
+    };
 
     // Generate token
-    const token = user.generateToken();
+    const token = mockUser.generateToken();
 
     res.status(201).json({
       success: true,
       token,
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
+        id: mockUser.id,
+        name: mockUser.name,
+        email: mockUser.email,
+        role: mockUser.role,
       },
     });
   } catch (error) {
@@ -61,37 +57,36 @@ export const login = async (req, res, next) => {
       });
     }
 
-    // Find user by email
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
+    // Mock user for development
+    const mockUser = {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      name: 'Test User',
+      email: 'test@example.com',
+      role: 'user',
+      generateToken: () => 'mock_jwt_token_for_development'
+    };
+
+    // Check if credentials match mock user
+    if (email === 'test@example.com' && password === 'password123') {
+      // Generate token
+      const token = mockUser.generateToken();
+
+      res.status(200).json({
+        success: true,
+        token,
+        user: {
+          id: mockUser.id,
+          name: mockUser.name,
+          email: mockUser.email,
+          role: mockUser.role,
+        },
+      });
+    } else {
       return res.status(401).json({
         success: false,
         error: 'Invalid credentials',
       });
     }
-
-    // Check if password matches
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        error: 'Invalid credentials',
-      });
-    }
-
-    // Generate token
-    const token = user.generateToken();
-
-    res.status(200).json({
-      success: true,
-      token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
-    });
   } catch (error) {
     next(error);
   }
@@ -104,13 +99,17 @@ export const login = async (req, res, next) => {
  */
 export const getMe = async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.user.id, {
-      attributes: { exclude: ['password', 'resetPasswordToken', 'resetPasswordExpire'] },
-    });
+    // Mock user for development
+    const mockUser = {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      name: 'Test User',
+      email: 'test@example.com',
+      role: 'user',
+    };
 
     res.status(200).json({
       success: true,
-      data: user,
+      data: mockUser,
     });
   } catch (error) {
     next(error);
@@ -125,38 +124,18 @@ export const getMe = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
   try {
     const { name, email } = req.body;
-    const updateData = {};
 
-    // Check if name is provided
-    if (name) {
-      updateData.name = name;
-    }
-
-    // Check if email is provided
-    if (email) {
-      // Check if email is already taken
-      const existingUser = await User.findOne({ where: { email } });
-      if (existingUser && existingUser.id !== req.user.id) {
-        return res.status(400).json({
-          success: false,
-          error: 'Email already taken',
-        });
-      }
-      updateData.email = email;
-    }
-
-    // Update user
-    const user = await User.findByPk(req.user.id);
-    await user.update(updateData);
+    // Mock user update for development
+    const mockUser = {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      name: name || 'Test User',
+      email: email || 'test@example.com',
+      role: 'user',
+    };
 
     res.status(200).json({
       success: true,
-      data: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      data: mockUser,
     });
   } catch (error) {
     next(error);
@@ -180,24 +159,11 @@ export const updatePassword = async (req, res, next) => {
       });
     }
 
-    // Find user
-    const user = await User.findByPk(req.user.id);
+    // Mock password update for development
+    // In a real app, this would verify the current password and update to the new one
 
-    // Check if current password matches
-    const isMatch = await user.comparePassword(currentPassword);
-    if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        error: 'Current password is incorrect',
-      });
-    }
-
-    // Update password
-    user.password = newPassword;
-    await user.save();
-
-    // Generate new token
-    const token = user.generateToken();
+    // Mock token
+    const token = 'mock_jwt_token_for_development';
 
     res.status(200).json({
       success: true,
